@@ -1,0 +1,15 @@
+---
+version: "3"
+
+services:
+  blockchain:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: blockchain
+    volumes:
+      - .:/EXIT
+    ports:
+      - "5000:5000"
+    entrypoint: python
+    command: blockchain.py
