@@ -13,12 +13,12 @@ class Blockchain(object):
 
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
-    
+
     def new_block(self, proof, previous_hash=None):
         """
         Creates a new block and adds it to the blockchain
-        
-        :param proof: <int> The proof given by the Proff of Work Algorithm
+
+        :param proof: <int> The proof given by the Proof of Work Algorithm
         :param previous_hash: (Optional) <str> Hash of previous Block
         :return: <dict> New Block
         """
@@ -35,7 +35,7 @@ class Blockchain(object):
 
         self.chain.append(block)
         return block
-    
+
     def new_transaction(self, sender, recipient, amount):
         """
         Creates a new transaction to the list of transactions
@@ -44,7 +44,7 @@ class Blockchain(object):
         :param amount: <int> Amount
         :return: <int> The index of the Block that will hold this transaction
         """
-        
+
         self.current_transactions.append({
             'sender': sender,
             'recipient': recipient,
@@ -52,9 +52,9 @@ class Blockchain(object):
         })
 
         return self.last_block['index'] + 1
-    
-    
-    def proof_of_work():
+
+
+    def proof_of_work(self, last_proof):
         """
         Simple Proof of Work Algorithm
          - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
@@ -69,7 +69,7 @@ class Blockchain(object):
             proof += 1
 
         return proof
-    
+
     @staticmethod
     def valid_proof(last_proof, proof):
         """
@@ -92,11 +92,11 @@ class Blockchain(object):
         :param block <dict> Block
         :return: <str>
         """
-    
+
     @property
     def last_block(self):
         # Returns the last block in the chain.
-        return self.chain(-1)
+        return self.chain[-1]
 
 app = Flask(__name__)
 
@@ -106,8 +106,7 @@ node_identifer = str(uuid4()).replace('-', '')
 # Instantiate the Blockchain
 blockchain = Blockchain()
 
-@app.route('/mine'
-, methods=['GET'])
+@app.route('/mine', methods=['GET'])
 def mine():
     last_block = blockchain.last_block
     last_proof = last_block['proof']
@@ -130,15 +129,15 @@ def mine():
     }
     return jsonify(response), 200
 
-@app.route('/transaction/new', methods=['POST'])
+@app.route('/transactions/new', methods=['POST'])
 def new_transaction():
     values = request.get_json()
 
     required = ['sender', 'recipient', 'amount']
     if not all(k in values for k in required):
         return 'Missing vlaues', 400
-    
-    index = blockchain.new_transaction(values['sender'], values['recepient'], values['amount'])
+
+    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
 
     response = {'message': f'Transaction will be added to Block {index}'}
     return jsonify(response), 201
@@ -153,5 +152,3 @@ def full_chain():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
-
