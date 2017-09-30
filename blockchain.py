@@ -14,7 +14,7 @@ class Blockchain(object):
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
     
-    def new_block(self):
+    def new_block(self, proof, previous_hash=None):
         """
         Creates a new block and adds it to the blockchain
         
@@ -106,7 +106,8 @@ node_identifer = str(uuid4()).replace('-', '')
 # Instantiate the Blockchain
 blockchain = Blockchain()
 
-@app.route('/mine, methods=['GET'])
+@app.route('/mine'
+, methods=['GET'])
 def mine():
     last_block = blockchain.last_block
     last_proof = last_block['proof']
