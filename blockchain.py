@@ -92,6 +92,8 @@ class Blockchain(object):
         :param block <dict> Block
         :return: <str>
         """
+        block_string = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()
 
     @property
     def last_block(self):
@@ -135,7 +137,7 @@ def new_transaction():
 
     required = ['sender', 'recipient', 'amount']
     if not all(k in values for k in required):
-        return 'Missing vlaues', 400
+        return 'Missing values', 400
 
     index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
 
