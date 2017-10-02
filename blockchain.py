@@ -54,12 +54,13 @@ class Blockchain(object):
 
     def resolve_conflicts(self):
         """
-        This is our containssensus Algorithm, it resolves conflicts
+        This is our consensus Algorithm, it resolves conflicts
         by replacing our chain with the longest one in the network.
 
         :return: <bool> True if our chain was replaced, False if not
         """
 
+        print('RESOLVE_CONFLICTS: start consensus algo')
         neighbours = self.nodes
         new_chain = None
 
@@ -255,4 +256,4 @@ def consensus():
     return jsonify(response), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
